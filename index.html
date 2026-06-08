@@ -3,101 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>행사용어 문맥 보정 변환기</title>
+  <title>행사용어 변환기</title>
   <style>
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f7fb;color:#111827}
-    header{padding:24px 16px;background:linear-gradient(135deg,#0f4c9a,#0a2f63);color:#fff;text-align:center}
-    header h1{margin:0;font-size:25px} header p{margin:8px 0 0;opacity:.9}
-    .wrap{max-width:1280px;margin:0 auto;padding:18px}
-    .panel{background:#fff;border:1px solid #dbe5f3;border-radius:16px;box-shadow:0 8px 24px rgba(15,76,154,.08);padding:16px;margin-bottom:18px}
-    .editor{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .box-title{font-weight:900;margin-bottom:8px;color:#0f3f7c;display:flex;align-items:center;justify-content:space-between;gap:8px}
-    textarea{width:100%;min-height:285px;border:1px solid #cbd8ea;border-radius:12px;padding:14px;font-size:16px;line-height:1.65;resize:vertical;outline:none}
-    textarea:focus,input:focus{border-color:#1d74d8;box-shadow:0 0 0 3px rgba(29,116,216,.12);outline:none}
-    #resultBox{min-height:285px;border:1px solid #cbd8ea;border-radius:12px;padding:14px;background:#fbfdff;font-size:16px;line-height:1.85;white-space:pre-wrap}
-    .changed{color:#e11d48;font-weight:900;cursor:pointer;text-decoration:underline;text-underline-offset:3px;border-radius:5px;padding:0 2px}
-    .changed:hover{background:#ffe4e6}
-    .context{color:#b91c1c;background:#fff1f2}
-    .suggestion{color:#dc2626;background:#fff1f2;border:1px solid #fecdd3;border-radius:6px;padding:1px 4px;cursor:pointer;font-weight:900;text-decoration:underline;text-underline-offset:3px}
-    .suggestion:hover{background:#ffe4e6}
-    .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-    button{border:0;border-radius:10px;padding:11px 14px;font-weight:900;cursor:pointer;background:#1d74d8;color:#fff}
-    button.secondary{background:#334155} button.light{background:#e8f1ff;color:#0f4c9a} button.danger{background:#dc2626} button.green{background:#047857}
-    .notice,.small{font-size:13px;color:#64748b} .stats{font-weight:900;color:#0f4c9a;margin-top:10px}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .table-wrap{overflow:auto;max-height:520px;border:1px solid #dbe5f3;border-radius:12px}
-    table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
-    th{position:sticky;top:0;background:#0f4c9a;color:#fff;z-index:1} th,td{border-bottom:1px solid #e5edf7;padding:9px 10px;text-align:left;white-space:nowrap}
-    tr:nth-child(even) td{background:#fbfdff} tr.highlight td{animation:flash 1.7s ease;background:#fff3cd!important}
-    @keyframes flash{0%,100%{background:#fff3cd}50%{background:#ffd166}}
-    .add-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin-top:12px}
-    input,select{border:1px solid #cbd8ea;border-radius:10px;padding:11px;font-size:15px;background:#fff}
-    .badge{display:inline-block;border-radius:999px;background:#e8f1ff;color:#0f4c9a;padding:4px 8px;font-size:12px;font-weight:900}
-    .warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:12px;padding:12px;margin-top:12px;line-height:1.6}
-    ul{margin:8px 0 0;padding-left:20px}
-    @media(max-width:850px){.editor,.grid2,.add-grid{grid-template-columns:1fr} header h1{font-size:22px}}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f7fb;color:#111827} header{padding:22px 16px;background:linear-gradient(135deg,#0f4c9a,#1d74d8);color:#fff;text-align:center} header h1{margin:0;font-size:26px} header p{margin:8px 0 0;opacity:.9}.wrap{max-width:1200px;margin:0 auto;padding:18px}.panel{background:#fff;border:1px solid #dbe5f3;border-radius:16px;box-shadow:0 8px 24px rgba(15,76,154,.08);padding:16px;margin-bottom:18px}.editor{display:grid;grid-template-columns:1fr 1fr;gap:14px}.box-title{font-weight:800;margin-bottom:8px;color:#0f3f7c}textarea{width:100%;min-height:260px;border:1px solid #cbd8ea;border-radius:12px;padding:14px;font-size:16px;line-height:1.6;resize:vertical;outline:none}textarea:focus{border-color:#1d74d8;box-shadow:0 0 0 3px rgba(29,116,216,.12)}#resultBox{min-height:260px;border:1px solid #cbd8ea;border-radius:12px;padding:14px;background:#fbfdff;font-size:16px;line-height:1.8;white-space:pre-wrap}.changed{color:#e11d48;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.changed:hover{background:#ffe4e6}.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;background:#1d74d8;color:#fff}button.secondary{background:#334155}button.light{background:#e8f1ff;color:#0f4c9a}button.danger{background:#dc2626}.notice{font-size:14px;color:#64748b;margin-top:8px}.stats{font-weight:800;color:#0f4c9a;margin-top:10px}.table-wrap{overflow:auto;max-height:520px;border:1px solid #dbe5f3;border-radius:12px}table{width:100%;border-collapse:collapse;background:#fff}th{position:sticky;top:0;background:#0f4c9a;color:#fff;z-index:1}th,td{border-bottom:1px solid #e5edf7;padding:10px 12px;text-align:left;white-space:nowrap}tr.highlight{animation:flash 1.8s ease;background:#fff3cd!important}tr:nth-child(even) td{background:#fbfdff}@keyframes flash{0%,100%{background:#fff3cd}50%{background:#ffd166}}.add-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:12px}input{border:1px solid #cbd8ea;border-radius:10px;padding:11px;font-size:15px}.small{font-size:13px;color:#64748b}.context-suggest{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 3px;padding:3px 6px;border:1px solid #fecdd3;border-radius:10px;background:#fff1f2;color:#e11d48;font-weight:800}
+.context-label{font-size:12px;color:#9f1239;margin-right:2px}
+.choice{border:0;background:transparent;color:#e11d48;font-weight:900;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0 2px;font-size:inherit}
+.choice:hover{background:#ffe4e6;border-radius:6px}
+.choice-divider{color:#fb7185;font-weight:900}
+.selected-context{color:#e11d48;font-weight:900;background:#fff1f2;border-radius:6px;padding:1px 3px}
+button.ai{background:#e11d48}
+button:disabled{opacity:.55;cursor:not-allowed}@media(max-width:780px){.editor{grid-template-columns:1fr}.add-grid{grid-template-columns:1fr}header h1{font-size:22px}}
   </style>
 </head>
 <body>
 <header>
-  <h1>행사용어 문맥 보정 변환기</h1>
-  <p>단어 치환 + 문장 보정 규칙을 함께 적용해 어색한 표현을 줄입니다.</p>
+  <h1>행사용어 변환기</h1>
+  <p>기존 표현을 행사자/용역 수행 표현으로 자동 변환합니다.</p>
 </header>
 <div class="wrap">
   <section class="panel">
     <div class="editor">
       <div>
         <div class="box-title">입력 문장</div>
-        <textarea id="inputText" placeholder="기존 공지문/안내문을 붙여넣으세요."></textarea>
+        <textarea id="inputText" placeholder="예) 근무자는 출근 후 근태 사진을 등록하고 퇴근 보고를 해주세요."></textarea>
       </div>
       <div>
-        <div class="box-title">변환 결과 <span class="badge">빨간 글자 클릭 → 규칙표 이동</span></div>
+        <div class="box-title">변환 결과</div>
         <div id="resultBox">변환 결과가 여기에 표시됩니다.</div>
       </div>
     </div>
     <div class="btns">
-      <button onclick="convertText()">1차 단어 변환</button>
-      <button class="danger" onclick="aiContextCheck()">단어 문맥 보정하기</button>
-      <button class="green" onclick="copyResult()">결과 복사</button>
-      <button class="secondary" onclick="copyPlainInput()">입력문 복사</button>
+      <button onclick="convertText()">변환하기</button>
+      <button class="ai" onclick="contextCorrect()">문맥 보정하기</button>
+      <button class="secondary" onclick="copyResult()">결과 복사하기</button>
       <button class="light" onclick="clearAll()">초기화</button>
     </div>
     <div id="stats" class="stats"></div>
-    <div id="suggestBox" class="warn" style="display:none"></div>
-    <div class="small" style="margin-top:8px">사용법: ① 텍스트 붙여넣기 → ② 1차 단어 변환 → ③ 단어 문맥 보정하기 → ④ 빨간색 어색 표현 클릭 시 해당 부분만 보정됩니다.</div>
+    <div class="notice">변환 후 문맥 보정하기를 누르면 빨간색 후보가 표시됩니다. 후보 중 하나를 클릭하면 해당 문장으로 적용됩니다.</div>
   </section>
 
   <section class="panel">
-    <div class="box-title">추가 규칙 등록</div>
+    <div class="box-title">단어 추가</div>
     <div class="add-grid">
-      <select id="newType">
-        <option value="word">단어 치환</option>
-        <option value="context">문맥 보정</option>
-      </select>
-      <input id="newFrom" placeholder="기존 표현 입력 예: 행사 참여 상태 문제" />
-      <input id="newTo" placeholder="변환 표현 입력 예: 행사 운영 기준 미준수" />
+      <input id="newFrom" placeholder="기존 표현 입력" />
+      <input id="newTo" placeholder="변환 표현 입력" />
       <button onclick="addRule()">추가</button>
     </div>
-    <div class="small">추가한 규칙은 현재 브라우저에 저장됩니다. 문맥 보정 규칙이 단어 치환보다 먼저 적용됩니다.</div>
+    <div class="small">추가한 단어는 현재 브라우저에 저장됩니다. 새로고침해도 유지됩니다.</div>
   </section>
 
   <section class="panel">
-    <div class="box-title">문맥 보정표 <span class="badge">어색한 표현 우선 보정</span></div>
+    <div class="box-title">변환표</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>No.</th><th>기존 표현/패턴</th><th>권장 표현</th><th>비고</th><th>관리</th></tr></thead>
-        <tbody id="contextTable"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="box-title">단어 변환표</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>No.</th><th>기존 표현</th><th>변환 표현</th><th>비고</th><th>관리</th></tr></thead>
-        <tbody id="wordTable"></tbody>
+        <thead><tr><th>No.</th><th>기존 표현</th><th>변환 표현</th><th>관리</th></tr></thead>
+        <tbody id="ruleTable"></tbody>
       </table>
     </div>
   </section>
@@ -108,176 +68,174 @@ const baseRules = [
 ['휴무일','행사 미참여일'],['휴무여부','행사 미참여 여부'],['휴무','미참여'],['퇴직증명서','계약 종료 확인서/해촉증명서'],['퇴직자','계약 종료자'],['퇴직서','계약 종료 확인서'],['퇴직금 정산서','사용 비권장'],['퇴직 처리','계약 종료 처리'],['퇴직 사유','계약 종료 사유'],['퇴직','계약 종료'],['퇴사자','계약 종료자'],['퇴사일','계약 종료일'],['퇴사 확인서','활동 종료 확인서'],['퇴사 처리','계약 종료 처리'],['퇴사','계약 종료'],['퇴근 시간','행사 종료 시간'],['퇴근 보고','행사 종료 보고'],['퇴근','행사 종료'],['취소','행사 취소'],['출퇴근 기록','현장 도착 및 종료 기록'],['출퇴근','현장 도착 및 행사 종료'],['출근부','행사 참여 확인표'],['출근 시간','현장 도착 시간'],['출근 보고','현장 도착 보고'],['출근','현장 도착'],['추가 근무','추가 행사 참여'],['총 근무시간','총 행사 진행 시간'],['체불임금','미지급 용역비'],['징계','배정 제한'],['직원 교육','행사자 사전 안내'],['직원','행사자'],['지각','현장 도착 지연'],['조퇴','행사 중도 종료'],['재직중','활동 중'],['재직상태','활동상태/계약상태'],['재직기간','활동기간'],['재직 증명서','활동 확인서'],['입사일','계약 시작일'],['임금','용역비'],['일급','1회 수행비'],['인센티브','성과 인센티브'],['인력','행사인원'],['월급','월 정산 용역비'],['업무 평가','행사 수행 평가'],['업무 지시','행사 운영 기준 안내'],['업무 내용','행사 수행 내용'],['알바','판촉 행사자'],['아르바이트생','행사인원'],['신규 근무자','신규 행사자'],['시급','시간당 수행 단가'],['스케줄','행사 일정'],['수습기간','초기 참여기간'],['수당','추가 수행비'],['사직서','계약 종료 요청서'],['사직','계약 종료 요청'],['복무규정','행사 운영 기준'],['배정완료','행사 배정 완료'],['무단결근','무통보 미참여'],['대타 근무자','대체 행사자'],['대타 근무','대체 행사 참여'],['대기','배정 대기'],['기존 근무자','기존 행사자'],['급여명세서','용역비 정산명세서'],['급여대장','용역비 정산 내역'],['급여 지급일','용역비 지급일'],['급여 정산','용역비 정산'],['급여','용역비 지급일'],['근태확인서','행사 참여 상태 확인서'],['근태 불량','행사 참여 기준 미준수'],['근태','행사 참여 상태'],['근속기간','활동 지속기간'],['근무확인서','행사 수행 확인서'],['근무확인','행사 참여 확인'],['근무표','행사 배정표'],['근무파트','행사파트'],['근무지역','행사지역'],['근무지','행사장소'],['근무중','행사 진행 중'],['근무자명','행사자명'],['근무자','판촉 행사자'],['근무일지','행사 수행 일지'],['근무일자','행사일자'],['근무일','행사 참여일'],['근무이력','행사 참여 이력'],['근무유형','행사유형/수행유형'],['근무요일','행사요일'],['근무완료','행사 완료'],['근무상태','행사 참여상태'],['근무상권','행사상권'],['근무불가','참여 불가'],['근무내역','행사 참여 내역'],['근무기간','용역 수행기간'],['근무가능','참여 가능'],['근무 확정','행사 배정 확정'],['근무 확인','행사 참여 확인'],['근무 태도','행사 진행 태도'],['근무 취소','행사 배정 취소'],['근무 종료일','용역 수행 종료일'],['근무 전 교육','행사 전 사전 안내'],['근무 이탈','현장 이탈'],['근무 이상 무','행사 이상 무'],['근무 예정','참여 예정'],['근무 시작일','용역 수행 시작일'],['근무 불가일','행사 참여 불가일'],['근무 배정','행사 배정표'],['근무 가능일','행사 참여 가능일'],['근로자','용역 수행자'],['근로계약서','프리랜서 용역계약서'],['관리자 지시','운영 기준 공유'],['고정 근무자','정기 행사자'],['고용기간','계약기간'],['경고장','참여 기준 미준수 안내서'],['결근','행사 미참여']
 ];
 
-const baseContextRules = [
-  ['행사 참여 상태 문제가 자주 적발되고 있습니다','행사 운영 기준 미준수 사례가 자주 확인되고 있습니다','근태 문제를 단어 그대로 바꾼 어색함 보정'],
-  ['행사 참여상태 문제가 자주 적발되고 있습니다','행사 운영 기준 미준수 사례가 자주 확인되고 있습니다','띄어쓰기 변형 보정'],
-  ['행사 참여 상태 문제 적발 시','행사 진행 기준 위반 사항이 적발될 경우','공지 문맥 보정'],
-  ['행사 참여상태 문제 적발 시','행사 진행 기준 위반 사항이 적발될 경우','띄어쓰기 변형 보정'],
-  ['행사 참여 상태 문제','행사 운영 기준 미준수','근태 문제 대체'],
-  ['행사 참여상태 문제','행사 운영 기준 미준수','띄어쓰기 변형 보정'],
-  ['최저시간당 수행 단가 패널티','최저 수행 단가 적용','표현 압축'],
-  ['시간당 수행 단가 패널티','최저 수행 단가 적용','시급 패널티 대체'],
-  ['용역비 지급일 패널티','수행 단가 패널티','급여 오변환 보정'],
-  ['상권이동','상권 이동','띄어쓰기 보정'],
-  ['업소방문','업소 방문','띄어쓰기 보정'],
-  ['체크표시','체크 표시','띄어쓰기 보정'],
-  ['별도 연락 갈 수 있습니다','별도 연락드릴 수 있습니다','공지 문체 보정'],
-  ['전 테이블에서 판촉 진행','전 테이블 대상 판촉 진행','공지 문체 보정'],
-  ['사진만 찍고 이동하지 마시고','사진만 촬영 후 이동하지 마시고','공지 문체 보정']
+let rules = JSON.parse(localStorage.getItem('customRules') || '[]');
+let lastConvertedText = '';
+
+const contextRules = [
+  { from:'행사 참여 상태 문제', to:'행사 운영 기준 미준수' },
+  { from:'행사 참여상태 문제', to:'행사 운영 기준 미준수' },
+  { from:'행사 참여 상태가 좋지 않습니다', to:'행사 운영 기준을 준수하지 않았습니다' },
+  { from:'현장 도착 지연이 잦습니다', to:'현장 도착 기준 준수가 필요합니다' },
+  { from:'행사 미참여가 잦습니다', to:'사전 공유 없는 행사 미참여가 반복되었습니다' },
+  { from:'행사 중도 종료가 있었습니다', to:'행사 운영 시간 내 중도 이탈이 확인되었습니다' },
+  { from:'현장 이탈이 있었습니다', to:'행사 진행 중 현장 이탈이 확인되었습니다' },
+  { from:'행사 진행 태도가 좋지 않습니다', to:'행사 응대 및 진행 태도 개선이 필요합니다' },
+  { from:'운영 기준 공유를 따르지 않았습니다', to:'사전 안내된 행사 운영 기준을 준수하지 않았습니다' },
+  { from:'행사 수행 평가가 낮습니다', to:'행사 수행 기준 대비 개선이 필요합니다' },
+  { from:'활동상태/계약상태 문제', to:'계약 및 행사 참여 상태 확인이 필요합니다' },
+  { from:'행사 취소가 많습니다', to:'행사 배정 취소 이력이 반복되었습니다' },
+  { from:'행사 배정 취소가 많습니다', to:'행사 배정 변경 및 취소 이력이 반복되었습니다' },
+  { from:'배정 제한 대상입니다', to:'행사 참여 기준 미준수로 배정 제한 검토 대상입니다' },
+  { from:'용역비 지급일 문제', to:'용역비 지급 기준 확인이 필요합니다' },
+  { from:'사용 비권장', to:'해당 표현은 사용하지 않는 것을 권장합니다' }
 ];
 
-let customRules = JSON.parse(localStorage.getItem('customRulesV2') || '[]');
-function saveRules(){localStorage.setItem('customRulesV2', JSON.stringify(customRules));}
-function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\]/g,'\$&');}
+function allRules(){
+  return [
+    ...baseRules.map((r,i)=>({id:i+1,from:r[0],to:r[1],base:true})),
+    ...rules.map((r,i)=>({id:baseRules.length+i+1,from:r.from,to:r.to,base:false}))
+  ];
+}
+
+function saveRules(){localStorage.setItem('customRules', JSON.stringify(rules));}
+function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function escapeHtml(s){return String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
-function allContextRules(){
-  const base = baseContextRules.map((r,i)=>({id:'c'+(i+1),num:i+1,type:'context',from:r[0],to:r[1],note:r[2]||'',base:true}));
-  const add = customRules.filter(r=>r.type==='context').map((r,i)=>({id:'cc'+i,num:base.length+i+1,type:'context',from:r.from,to:r.to,note:'직접 추가',base:false,customIndex:customRules.indexOf(r)}));
-  return [...base,...add];
-}
-function allWordRules(){
-  const base = baseRules.map((r,i)=>({id:'w'+(i+1),num:i+1,type:'word',from:r[0],to:r[1],note:'기본',base:true}));
-  const add = customRules.filter(r=>r.type==='word').map((r,i)=>({id:'ww'+i,num:base.length+i+1,type:'word',from:r.from,to:r.to,note:'직접 추가',base:false,customIndex:customRules.indexOf(r)}));
-  return [...base,...add];
-}
-function allRules(){return [...allContextRules(), ...allWordRules()];}
-function renderTables(){
-  const ct=document.getElementById('contextTable'); ct.innerHTML='';
-  allContextRules().forEach(r=>{
-    const tr=document.createElement('tr'); tr.id='rule-'+r.id;
-    tr.innerHTML=`<td>${r.num}</td><td>${escapeHtml(r.from)}</td><td>${escapeHtml(r.to)}</td><td>${escapeHtml(r.note)}</td><td>${r.base?'<span class="small">기본</span>':`<button class="danger" onclick="deleteRule(${r.customIndex})">삭제</button>`}</td>`;
-    ct.appendChild(tr);
-  });
-  const wt=document.getElementById('wordTable'); wt.innerHTML='';
-  allWordRules().forEach(r=>{
-    const tr=document.createElement('tr'); tr.id='rule-'+r.id;
-    tr.innerHTML=`<td>${r.num}</td><td>${escapeHtml(r.from)}</td><td>${escapeHtml(r.to)}</td><td>${escapeHtml(r.note)}</td><td>${r.base?'<span class="small">기본</span>':`<button class="danger" onclick="deleteRule(${r.customIndex})">삭제</button>`}</td>`;
-    wt.appendChild(tr);
+
+function renderTable(){
+  const tbody=document.getElementById('ruleTable');
+  tbody.innerHTML='';
+  allRules().forEach((r)=>{
+    const tr=document.createElement('tr');
+    tr.id='rule-'+r.id;
+    tr.innerHTML=`<td>${r.id}</td><td>${escapeHtml(r.from)}</td><td>${escapeHtml(r.to)}</td><td>${r.base?'<span class="small">기본</span>':`<button class="danger" onclick="deleteRule(${r.id})">삭제</button>`}</td>`;
+    tbody.appendChild(tr);
   });
 }
-function applyRuleToSegments(segments, rule){
-  const re = new RegExp(escapeRegExp(rule.from), 'g');
-  let changed = 0;
-  const out=[];
-  segments.forEach(seg=>{
-    if(seg.ruleId){out.push(seg); return;}
-    let last=0, m;
-    while((m=re.exec(seg.text))!==null){
-      if(m.index>last) out.push({text:seg.text.slice(last,m.index)});
-      out.push({text:rule.to, ruleId:rule.id, ruleType:rule.type});
-      changed++;
-      last=m.index+m[0].length;
-    }
-    if(last<seg.text.length) out.push({text:seg.text.slice(last)});
-  });
-  return {segments:out, changed};
-}
-let currentPlainText = '';
-let currentSuggestions = [];
 
 function convertText(){
-  const input=document.getElementById('inputText').value;
-  if(!input.trim()){
+  let text=document.getElementById('inputText').value;
+  if(!text.trim()){
     document.getElementById('resultBox').textContent='입력된 문장이 없습니다.';
+    document.getElementById('stats').textContent='';
+    lastConvertedText='';
+    return;
+  }
+  let html=escapeHtml(text);
+  let count=0;
+  const sorted=allRules().sort((a,b)=>b.from.length-a.from.length);
+  sorted.forEach(r=>{
+    const re=new RegExp(escapeRegExp(escapeHtml(r.from)),'g');
+    html=html.replace(re,()=>{
+      count++;
+      return `<span class="changed" onclick="goToRule(${r.id})">${escapeHtml(r.to)}</span>`;
+    });
+  });
+  document.getElementById('resultBox').innerHTML=html;
+  lastConvertedText=document.getElementById('resultBox').innerText;
+  document.getElementById('stats').textContent=`총 ${count}개 단어가 변환되었습니다.`;
+}
+
+function contextCorrect(){
+  const box=document.getElementById('resultBox');
+  const baseText=lastConvertedText || box.innerText;
+  if(!baseText.trim() || baseText.includes('변환 결과가 여기에 표시됩니다') || baseText.includes('입력된 문장이 없습니다')){
+    alert('먼저 변환하기를 눌러주세요.');
     return;
   }
 
-  // 1차는 단어 변환만 적용합니다. 문맥 보정은 별도 버튼에서 확인 후 적용합니다.
-  let segments=[{text:input}];
-  let applied=[];
-  const sorted=[...allWordRules().sort((a,b)=>b.from.length-a.from.length)];
-  sorted.forEach(rule=>{
-    const res=applyRuleToSegments(segments, rule);
-    segments=res.segments;
-    if(res.changed>0) applied.push({...rule,count:res.changed});
-  });
+  let html=escapeHtml(baseText);
+  let count=0;
 
-  currentPlainText = segments.map(seg=>seg.text).join('');
-  currentSuggestions = [];
+  contextRules
+    .sort((a,b)=>b.from.length-a.from.length)
+    .forEach((r,idx)=>{
+      const re=new RegExp(escapeRegExp(escapeHtml(r.from)),'g');
+      html=html.replace(re,()=>{
+        count++;
+        return `<span class="context-suggest" data-context-id="${idx}">
+          <span class="context-label">문맥 후보</span>
+          <button type="button" class="choice" onclick="applyContextChoice(this, '${escapeHtml(r.from)}')">${escapeHtml(r.from)}</button>
+          <span class="choice-divider">/</span>
+          <button type="button" class="choice" onclick="applyContextChoice(this, '${escapeHtml(r.to)}')">${escapeHtml(r.to)}</button>
+        </span>`;
+      });
+    });
 
-  const html=segments.map(seg=>seg.ruleId?`<span class="changed" onclick="goToRule('${seg.ruleId}')">${escapeHtml(seg.text)}</span>`:escapeHtml(seg.text)).join('');
-  document.getElementById('resultBox').innerHTML=html;
-  const total=applied.reduce((s,r)=>s+r.count,0);
-  document.getElementById('stats').textContent=`1차 단어 변환 ${total}개 적용 / 문맥 보정은 아직 적용 전`;
-  document.getElementById('suggestBox').style.display='none';
-  document.getElementById('suggestBox').innerHTML='';
-}
+  box.innerHTML=html;
 
-function aiContextCheck(){
-  const text = currentPlainText || document.getElementById('resultBox').innerText;
-  if(!text || text.includes('변환 결과가 여기에 표시됩니다')){alert('먼저 1차 단어 변환을 해주세요.'); return;}
-
-  currentPlainText = text;
-  currentSuggestions = [];
-  allContextRules().sort((a,b)=>b.from.length-a.from.length).forEach(rule=>{
-    let start=0;
-    while(true){
-      const idx=currentPlainText.indexOf(rule.from,start);
-      if(idx===-1) break;
-      currentSuggestions.push({ruleId:rule.id, from:rule.from, to:rule.to, note:rule.note, start:idx, end:idx+rule.from.length});
-      start=idx+rule.from.length;
-    }
-  });
-
-  if(!currentSuggestions.length){
-    document.getElementById('suggestBox').style.display='block';
-    document.getElementById('suggestBox').innerHTML='<b>단어 문맥 보정 결과</b><br>현재 등록된 문맥 보정 규칙 기준으로 어색한 표현이 발견되지 않았습니다.';
-    document.getElementById('stats').textContent='문맥 보정 후보 0개';
-    document.getElementById('resultBox').textContent=currentPlainText;
-    return;
+  if(count===0){
+    document.getElementById('stats').textContent='문맥 보정 후보가 없습니다. 현재 변환 결과를 그대로 사용하면 됩니다.';
+  } else {
+    document.getElementById('stats').textContent=`문맥 보정 후보 ${count}개가 표시되었습니다. 각 후보에서 사용할 표현을 클릭하세요.`;
   }
-
-  renderSuggestionHighlights();
-  const box=document.getElementById('suggestBox');
-  box.style.display='block';
-  box.innerHTML='<b>⚠ 어색할 수 있는 표현 발견</b><ul>'+currentSuggestions.map((s,i)=>`<li><b>${escapeHtml(s.from)}</b> → 추천: <b>${escapeHtml(s.to)}</b> <button class="light" style="padding:5px 8px" onclick="applySuggestion(${i})">이 부분 보정</button></li>`).join('')+'</ul>';
-  document.getElementById('stats').textContent=`문맥 보정 후보 ${currentSuggestions.length}개 발견 / 빨간 표현 클릭 시 해당 부분만 보정`;
 }
 
-function renderSuggestionHighlights(){
-  const suggestions=[...currentSuggestions].sort((a,b)=>a.start-b.start);
-  let html='';
-  let pos=0;
-  suggestions.forEach((s,i)=>{
-    if(s.start < pos) return;
-    html += escapeHtml(currentPlainText.slice(pos,s.start));
-    html += `<span class="suggestion" title="클릭하면 추천 표현으로 보정됩니다" onclick="applySuggestion(${i})">${escapeHtml(currentPlainText.slice(s.start,s.end))}</span>`;
-    pos=s.end;
+function applyContextChoice(btn, value){
+  const wrap=btn.closest('.context-suggest');
+  const selected=document.createElement('span');
+  selected.className='selected-context';
+  selected.textContent=decodeHtml(value);
+  wrap.replaceWith(selected);
+}
+
+function decodeHtml(html){
+  const txt=document.createElement('textarea');
+  txt.innerHTML=html;
+  return txt.value;
+}
+
+function plainResult(){
+  const clone=document.getElementById('resultBox').cloneNode(true);
+  clone.querySelectorAll('.context-suggest').forEach(wrap=>{
+    const buttons=wrap.querySelectorAll('.choice');
+    if(buttons[1]) wrap.replaceWith(document.createTextNode(buttons[1].innerText));
   });
-  html += escapeHtml(currentPlainText.slice(pos));
-  document.getElementById('resultBox').innerHTML=html;
+  return clone.innerText;
 }
 
-function applySuggestion(index){
-  const s=currentSuggestions[index];
-  if(!s) return;
-  currentPlainText = currentPlainText.slice(0,s.start) + s.to + currentPlainText.slice(s.end);
-  // 적용 후 다시 후보 검사
-  aiContextCheck();
+async function copyResult(){
+  const text=plainResult();
+  await navigator.clipboard.writeText(text);
+  alert('변환 결과를 복사했습니다.');
 }
 
-function renderSuggestions(applied){
-  const box=document.getElementById('suggestBox');
-  const ctx=applied.filter(r=>r.type==='context');
-  if(!ctx.length){box.style.display='none';box.innerHTML='';return;}
-  box.style.display='block';
-  box.innerHTML='<b>문맥 보정 적용 내역</b><ul>'+ctx.map(r=>`<li>${escapeHtml(r.from)} → <b>${escapeHtml(r.to)}</b> <span class="small">(${r.count}회)</span></li>`).join('')+'</ul>';
+function clearAll(){
+  document.getElementById('inputText').value='';
+  document.getElementById('resultBox').textContent='변환 결과가 여기에 표시됩니다.';
+  document.getElementById('stats').textContent='';
+  lastConvertedText='';
 }
-function plainResult(){return document.getElementById('resultBox').innerText;}
-async function copyResult(){await navigator.clipboard.writeText(plainResult());alert('변환 결과를 복사했습니다.');}
-async function copyPlainInput(){await navigator.clipboard.writeText(document.getElementById('inputText').value);alert('입력문을 복사했습니다.');}
-function clearAll(){document.getElementById('inputText').value='';document.getElementById('resultBox').textContent='변환 결과가 여기에 표시됩니다.';document.getElementById('stats').textContent='';document.getElementById('suggestBox').style.display='none';}
-function goToRule(id){const el=document.getElementById('rule-'+id);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('highlight');setTimeout(()=>el.classList.remove('highlight'),1800);}
+
+function goToRule(id){
+  const el=document.getElementById('rule-'+id);
+  if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.classList.add('highlight');
+  setTimeout(()=>el.classList.remove('highlight'),1800);
+}
+
 function addRule(){
-  const type=document.getElementById('newType').value;
   const from=document.getElementById('newFrom').value.trim();
   const to=document.getElementById('newTo').value.trim();
   if(!from||!to){alert('기존 표현과 변환 표현을 모두 입력해주세요.');return;}
-  customRules.push({type,from,to}); saveRules();
-  document.getElementById('newFrom').value=''; document.getElementById('newTo').value=''; renderTables(); alert('규칙이 추가되었습니다.');
+  rules.push({from,to});
+  saveRules();
+  document.getElementById('newFrom').value='';
+  document.getElementById('newTo').value='';
+  renderTable();
+  alert('단어가 추가되었습니다.');
 }
-function deleteRule(customIndex){if(customIndex>=0){customRules.splice(customIndex,1);saveRules();renderTables();}}
-renderTables();
+
+function deleteRule(id){
+  const idx=id-baseRules.length-1;
+  if(idx>=0){
+    rules.splice(idx,1);
+    saveRules();
+    renderTable();
+  }
+}
+
+renderTable();
 </script>
 </body>
 </html>
