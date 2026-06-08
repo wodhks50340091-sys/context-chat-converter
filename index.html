@@ -11,6 +11,37 @@
 .choice:hover{background:#ffe4e6;border-radius:6px}
 .choice-divider{color:#fb7185;font-weight:900}
 .selected-context{color:#e11d48;font-weight:900;background:#fff1f2;border-radius:6px;padding:1px 3px}
+.changed-pair{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  margin:0 2px;
+  vertical-align:baseline;
+}
+
+.changed-original{
+  background:#fef08a;
+  color:#854d0e;
+  padding:2px 5px;
+  border-radius:5px;
+  font-weight:800;
+}
+
+.changed-new{
+  background:#dbeafe;
+  color:#1d4ed8;
+  padding:2px 5px;
+  border-radius:5px;
+  font-weight:900;
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+.changed-arrow{
+  color:#64748b;
+  font-weight:800;
+}
 button.ai{background:#e11d48}
 button:disabled{opacity:.55;cursor:not-allowed}.ranking-list{display:grid;gap:8px;margin-bottom:14px}.rank-card{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;border:1px solid #dbe5f3;border-radius:12px;padding:10px;background:#fbfdff}.rank-no{font-weight:900;color:#0f4c9a}.rank-word{font-weight:800}.rank-count{font-weight:900;color:#e11d48}.muted{color:#64748b;font-size:14px}@media(max-width:780px){.editor{grid-template-columns:1fr}.add-grid{grid-template-columns:1fr}header h1{font-size:22px}}
   </style>
@@ -152,7 +183,12 @@ async function convertText(){
       count++;
       const key=`${r.from}|||${r.to}`;
       lastUsageMap.set(key,{from:r.from,to:r.to,count:(lastUsageMap.get(key)?.count||0)+1});
-      return `<span class="changed" onclick="goToRule(${r.id})">${escapeHtml(r.to)}</span>`;
+      return `
+<span class="changed-pair" title="기존 표현 → 변환 표현">
+  <span class="changed-original">${escapeHtml(r.from)}</span>
+  <span class="changed-arrow">→</span>
+  <span class="changed-new" onclick="goToRule(${r.id})">${escapeHtml(r.to)}</span>
+</span>`;
     });
   });
   document.getElementById('resultBox').innerHTML=html;
@@ -213,11 +249,16 @@ function decodeHtml(html){
 }
 
 function plainResult(){
-  const clone=document.getElementById('resultBox').cloneNode(true);
-  clone.querySelectorAll('.context-suggest').forEach(wrap=>{
-    const buttons=wrap.querySelectorAll('.choice');
-    if(buttons[1]) wrap.replaceWith(document.createTextNode(buttons[1].innerText));
+  const box = document.getElementById('resultBox');
+  const clone = box.cloneNode(true);
+
+  clone.querySelectorAll('.changed-pair').forEach(pair=>{
+    const selected = pair.querySelector('.selected-context, .changed-new');
+    if(selected){
+      pair.replaceWith(document.createTextNode(selected.innerText));
+    }
   });
+
   return clone.innerText;
 }
 
