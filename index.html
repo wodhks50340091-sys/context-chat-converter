@@ -63,7 +63,7 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
       <input id="newTo" placeholder="변환 표현 입력" />
       <button onclick="addRule()">추가</button>
     </div>
-    <div class="small">추가한 단어는 Supabase에 저장됩니다. 다른 기기에서도 같은 변환표를 불러옵니다.</div>
+    <div class="small">추가한 단어는 변환표에 저장됩니다. </div>
     <div id="ruleSyncStatus" class="sync-status"></div>
   </section>
 
@@ -176,7 +176,7 @@ async function loadCustomRules(){
     created_at:item.created_at
   }));
   renderTable();
-  setRuleSyncStatus(`추가 단어 ${rules.length}개를 Supabase에서 불러왔습니다.`);
+  setRuleSyncStatus(`추가 단어 ${rules.length}개를 불러왔습니다.`);
 }
 function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function escapeHtml(s){return String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
@@ -408,7 +408,7 @@ async function addRule(){
   document.getElementById('newFrom').value='';
   document.getElementById('newTo').value='';
   await loadCustomRules();
-  alert('단어가 Supabase에 추가되었습니다.');
+  alert('단어가 변환표에 추가되었습니다.');
 }
 
 async function deleteRule(id){
