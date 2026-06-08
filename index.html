@@ -49,7 +49,9 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
       <button class="light" onclick="clearAll()">초기화</button>
     </div>
     <div id="stats" class="stats"></div>
-    <div class="notice">변환 후 문맥 보정하기를 누르면 빨간색 후보가 표시됩니다. 후보 중 하나를 클릭하면 해당 문장으로 적용됩니다.</div>
+    <div class="notice" id="contextNotice">
+  변환 후 문맥 보정하기를 누르면 빨간색 후보가 표시됩니다. 후보 중 하나를 클릭하면 해당 문장으로 적용됩니다.
+</div>
   </section>
 
   <section class="panel">
@@ -309,8 +311,14 @@ function fixKoreanParticles(text){
 }
 
 function contextCorrect(){
-  const box=document.getElementById('resultBox');
-  const baseText=lastConvertedText || box.innerText;
+
+const notice=document.getElementById('contextNotice');
+if(notice){
+notice.style.display='none';
+}
+
+const box=document.getElementById('resultBox');
+const baseText=lastConvertedText || box.innerText;
   if(!baseText.trim() || baseText.includes('변환 결과가 여기에 표시됩니다') || baseText.includes('입력된 문장이 없습니다')){
     alert('먼저 변환하기를 눌러주세요.');
     return;
@@ -384,14 +392,19 @@ async function copyResult(){
 }
 
 function clearAll(){
-  document.getElementById('inputText').value='';
-  document.getElementById('resultBox').textContent='변환 결과가 여기에 표시됩니다.';
-  document.getElementById('stats').textContent='';
-  lastConvertedText='';
-  lastUsageMap.clear();
-  lastMatchedRules=[];
-  lastContextMatches=[];
-  renderInputHighlight([], []);
+document.getElementById('inputText').value='';
+document.getElementById('resultBox').textContent='변환 결과가 여기에 표시됩니다.';
+document.getElementById('stats').textContent='';
+lastConvertedText='';
+lastUsageMap.clear();
+lastMatchedRules=[];
+lastContextMatches=[];
+renderInputHighlight([], []);
+
+const notice=document.getElementById('contextNotice');
+if(notice){
+notice.style.display='block';
+}
 }
 
 function goToRule(id){
