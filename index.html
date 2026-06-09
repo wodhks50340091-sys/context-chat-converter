@@ -549,7 +549,7 @@ if(finalEditBox){
   renderInputHighlight(lastMatchedRules, lastContextMatches);
 
   if(count===0 && !particleChanged){
-    document.getElementById('stats').textContent='문맥 보정 후보가 없습니다. 현재 변환 결과를 그대로 사용하면 됩니다.';
+    document.getElementById('stats').textContent='현재 변환 결과를 그대로 사용하면 됩니다. 만일 헷갈리는 단어나 문장이 있다면 ChatGPT에 물어보기 버튼을 클릭해주세요';
   } else if(count===0 && particleChanged){
     document.getElementById('stats').textContent='조사 보정이 적용되었습니다. 이/가, 을/를, 은/는, 와/과, 로/으로를 문장에 맞게 정리했습니다.';
   } else if(count>0 && particleChanged){
