@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BSKY 프리랜서 행사용어 변환기</title>
   <style>
+html {
+  scroll-behavior: smooth;
+}
+    
     *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f7fb;color:#111827} header{padding:22px 16px;background:linear-gradient(135deg,#0f4c9a,#1d74d8);color:#fff;text-align:center} header h1{margin:0;font-size:26px} header p{margin:8px 0 0;opacity:.9}.wrap{max-width:1200px;margin:0 auto;padding:18px}.panel{background:#fff;border:1px solid #dbe5f3;border-radius:16px;box-shadow:0 8px 24px rgba(15,76,154,.08);padding:16px;margin-bottom:18px}.editor{display:grid;grid-template-columns:1fr 1fr;gap:14px}.box-title{font-weight:800;margin-bottom:8px;color:#0f3f7c}textarea{width:100%;min-height:260px;border:1px solid #cbd8ea;border-radius:12px;padding:14px;font-size:16px;line-height:1.6;resize:vertical;outline:none}textarea:focus{border-color:#1d74d8;box-shadow:0 0 0 3px rgba(29,116,216,.12)}#resultBox{min-height:260px;border:1px solid #cbd8ea;border-radius:12px;padding:14px;background:#fbfdff;font-size:16px;line-height:1.8;white-space:pre-wrap}.changed{color:#e11d48;font-weight:800;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.changed:hover{background:#ffe4e6}.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;background:#1d74d8;color:#fff}button.secondary{background:#334155}button.light{background:#e8f1ff;color:#0f4c9a}button.danger{background:#dc2626}.notice{font-size:14px;color:#64748b;margin-top:8px}.stats{font-weight:800;color:#0f4c9a;margin-top:10px}.table-wrap{overflow:auto;max-height:520px;border:1px solid #dbe5f3;border-radius:12px}table{width:100%;border-collapse:collapse;background:#fff}th{position:sticky;top:0;background:#0f4c9a;color:#fff;z-index:1}th,td{border-bottom:1px solid #e5edf7;padding:10px 12px;text-align:left;white-space:nowrap}tr.highlight{animation:flash 1.8s ease;background:#fff3cd!important}tr:nth-child(even) td{background:#fbfdff}@keyframes flash{0%,100%{background:#fff3cd}50%{background:#ffd166}}.add-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:12px}input{border:1px solid #cbd8ea;border-radius:10px;padding:11px;font-size:15px}.small{font-size:13px;color:#64748b}.context-suggest{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 3px;padding:3px 6px;border:1px solid #fecdd3;border-radius:10px;background:#fff1f2;color:#e11d48;font-weight:800}
 .context-label{font-size:12px;color:#9f1239;margin-right:2px}
 .choice{border:0;background:transparent;color:#e11d48;font-weight:900;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0 2px;font-size:inherit}
@@ -68,10 +72,11 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
       <button onclick="convertText()">1) 변환하기</button>
       <button class="ai" onclick="contextCorrect()">2) 문맥 보정하기</button>
 <button class="chatgpt-link" onclick="askChatGPT()">
-  ChatGPT에 물어보기
+  3) ChatGPT에 물어보기
 </button>
 <button class="secondary" onclick="copyResult()">4) 결과 복사하기</button>
       <button class="light" onclick="clearAll()">초기화</button>
+      <button onclick="location.href='#wordAddBox'">단어 추가하기</button>
     </div>
     <div id="stats" class="stats"></div>
     <div class="notice" id="contextNotice">
@@ -93,7 +98,7 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
 
 
   <section class="panel">
-    <div class="box-title">단어 추가</div>
+    <div class="box-title" id="wordAddBox">단어 추가</div>
     <div class="add-grid">
       <input id="newFrom" placeholder="기존 표현 입력" />
       <input id="newTo" placeholder="변환 표현 입력" />
