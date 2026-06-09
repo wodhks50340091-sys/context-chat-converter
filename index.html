@@ -797,7 +797,7 @@ function formatDate(value){
 async function askChatGPT(){
 
 const result=document.getElementById('resultBox').innerText.trim();
-
+const input=document.getElementById('inputText').value.trim();
 if(!result || result.includes('변환 결과가 여기에 표시됩니다')){
   alert('먼저 문장을 변환해주세요.');
   return;
@@ -818,7 +818,10 @@ const prompt =
 
 마지막에 돌아가서 사이트에 단어 추가 복사해서 붙여넣기 해주면 중복 제외 후 반영된다고 답변에 알려주세요
 
-문장:
+입력 문장:
+${input}
+
+변환 결과:
 ${result}`;
 
 try{
