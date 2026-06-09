@@ -100,7 +100,6 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
     </div>
   </section>
 
-
   <section class="panel">
   <div class="box-title" id="wordAddBox">하나씩 단어 추가</div>
 
@@ -124,7 +123,26 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
   <div class="small">추가한 단어는 변환표에 저장됩니다.</div>
   <div id="ruleSyncStatus" class="sync-status"></div>
 </section>
-  
+  <section class="panel">
+  <div class="box-title">변환표</div>
+
+  <div class="table-wrap">
+    <table>
+
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>기존 표현</th>
+          <th>변환 표현</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+
+      <tbody id="ruleTable"></tbody>
+
+    </table>
+  </div>
+</section>
 </div>
 <footer class="footer">
   문의 : 정유진 매니저 010-5034-0091
@@ -329,14 +347,24 @@ function escapeHtml(s){return String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':
 
 function renderTable(){
   const tbody=document.getElementById('ruleTable');
+
+  if(!tbody){
+    console.error('ruleTable 요소를 찾을 수 없습니다. HTML에 <tbody id="ruleTable"></tbody>가 있는지 확인하세요.');
+    return;
+  }
+
   tbody.innerHTML='';
+
   allRules().forEach((r)=>{
     const tr=document.createElement('tr');
     tr.id='rule-'+r.id;
+
     if(!r.base) tr.classList.add('custom-rule');
+
     const manageHtml = r.base
       ? '<span class="small">기본</span>'
       : `<span class="custom-badge">추가</span> <button class="danger" onclick="deleteRule(${r.id})">삭제</button>`;
+
     tr.innerHTML=`<td>${r.id}</td><td>${escapeHtml(r.from)}</td><td>${escapeHtml(r.to)}</td><td>${manageHtml}</td>`;
     tbody.appendChild(tr);
   });
