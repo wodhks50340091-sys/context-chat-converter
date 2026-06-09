@@ -741,13 +741,7 @@ async function loadUsageRanking(){
     </tr>`).join('') : '<tr><td colspan="5" class="muted">아직 기록이 없습니다.</td></tr>';
 }
 
-function formatDate(value){
-  if(!value) return '-';
-  const d=new Date(value);
-  if(Number.isNaN(d.getTime())) return '-';
-  return d.toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-}
-function askChatGPT(){
+async function askChatGPT(){
 
 const result=document.getElementById('resultBox').innerText.trim();
 
@@ -763,12 +757,32 @@ const prompt =
 문장:
 ${result}`;
 
-const url =
-'https://chatgpt.com/?q=' +
-encodeURIComponent(prompt);
+try{
+await navigator.clipboard.writeText(prompt);
 
-window.open(url, '_blank');
+```
+alert(
+```
+
+`ChatGPT로 이동합니다.
+
+프롬프트가 자동 복사되었습니다.
+ChatGPT 창에서 붙여넣기(Ctrl+V) 해주세요.`
+);
+
+```
+window.open('https://chatgpt.com/', '_blank');
+```
+
+}catch(e){
+
+```
+alert('복사에 실패했습니다.');
+```
+
 }
+}
+
 
   
 renderTable();
