@@ -369,33 +369,71 @@ function chooseParticle(word, pair){
 }
 
 function fixKoreanParticles(text){
-  return String(text)
-    // 이/가 보정
-    .replace(/([가-힣]+)(이|가)(?=[\s.,!?~]|$)/g, (match, word)=>{
-      return word + chooseParticle(word, '이/가');
+  return text
+    .replace(/([가-힣]+)(가)/g, (match, word) => {
+      const lastChar = word[word.length - 1];
+      const code = lastChar.charCodeAt(0) - 44032;
+      if(code < 0 || code > 11171) return match;
+      return code % 28 !== 0 ? `${word}이` : `${word}가`;
     })
-
-    // 을/를 보정
-    .replace(/([가-힣]+)(을|를)(?=[\s.,!?~]|$)/g, (match, word)=>{
-      return word + chooseParticle(word, '을/를');
+    .replace(/([가-힣]+)(를)/g, (match, word) => {
+      const lastChar = word[word.length - 1];
+      const code = lastChar.charCodeAt(0) - 44032;
+      if(code < 0 || code > 11171) return match;
+      return code % 28 !== 0 ? `${word}을` : `${word}를`;
     })
-
-    // 은/는 보정
-    //.replace(/([가-힣]+)(은|는)(?=[\s.,!?~]|$)/g, (match, word)=>{
-    //  return word + chooseParticle(word, '은/는');
-    //})
-
-    // 와/과 보정
-    .replace(/([가-힣]+)(와|과)(?=[\s.,!?~]|$)/g, (match, word)=>{
-      return word + chooseParticle(word, '와/과');
+    .replace(/([가-힣]+)(와)/g, (match, word) => {
+      const lastChar = word[word.length - 1];
+      const code = lastChar.charCodeAt(0) - 44032;
+      if(code < 0 || code > 11171) return match;
+      return code % 28 !== 0 ? `${word}과` : `${word}와`;
     })
+    .replace(/([가-힣]+)(로)/g, (match, word) => {
+      const lastChar = word[word.length - 1];
+      const code = lastChar.charCodeAt(0) - 44032;
+      if(code < 0 || code > 11171) return match;
 
-    // 로/으로 보정
-    .replace(/([가-힣]+)(로|으로)(?=[\s.,!?~]|$)/g, (match, word)=>{
-      return word + chooseParticle(word, '로/으로');
+      const jong = code % 28;
+
+      // 받침 없음 또는 ㄹ 받침이면 '로', 그 외 받침이면 '으로'
+      return (jong === 0 || jong === 8) ? `${word}로` : `${word}으로`;
     });
 }
 
+function fixCommonKoreanTypos(text){
+  const typoRules = [
+    ['걷은 속도','걷는 속도'],
+    ['먹은 방법','먹는 방법'],
+    ['하는대','하는데'],
+    ['했는대','했는데'],
+    ['되는대','되는데'],
+    ['됬','됐'],
+    ['됬습니다','됐습니다'],
+    ['안됌','안됨'],
+    ['안되요','안돼요'],
+    ['되요','돼요'],
+    ['할께요','할게요'],
+    ['갈께요','갈게요'],
+    ['볼께요','볼게요'],
+    ['어떻해','어떻게'],
+    ['왠만하면','웬만하면'],
+    ['몇일','며칠'],
+    ['금새','금세'],
+    ['뵈요','봬요'],
+    ['바램','바람'],
+    ['역활','역할'],
+    ['희안하다','희한하다']
+  ];
+
+  let fixed = text;
+  typoRules.forEach(([wrong, right])=>{
+    fixed = fixed.replace(new RegExp(escapeRegExp(wrong), 'g'), right);
+  });
+
+  return fixed;
+}
+
+  
 function contextCorrect(){
 
 const notice=document.getElementById('contextNotice');
@@ -433,6 +471,9 @@ const baseText=lastConvertedText || box.innerText;
       });
     });
 
+  html = fixKoreanParticles(html);
+  html = fixCommonKoreanTypos(html);
+  
   box.innerHTML=html;
   renderInputHighlight(lastMatchedRules, lastContextMatches);
 
@@ -468,7 +509,10 @@ function plainResult(){
     const buttons=wrap.querySelectorAll('.choice');
     if(buttons[1]) wrap.replaceWith(document.createTextNode(buttons[1].innerText));
   });
-  return clone.innerText;
+  let text = clone.innerText;
+text = fixKoreanParticles(text);
+text = fixCommonKoreanTypos(text);
+return text;
 }
 
 async function copyResult(){
