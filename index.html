@@ -25,19 +25,12 @@
 .chatgpt-link:hover{
   background:#0e8f70;
 }
-.final-edit-box{
-  width:100%;
-  min-height:180px;
-  margin-top:14px;
-  border:1px solid #cbd5e1;
-  border-radius:12px;
-  padding:14px;
-  font-size:15px;
-  line-height:1.7;
-  resize:vertical;
-  background:#fff;
-  display:block;
+#resultBox[contenteditable="true"]:focus{
+  outline:2px solid #93c5fd;
+  border-color:#60a5fa;
+  background:#ffffff;
 }
+    
 .footer{
   margin-top:30px;
   padding:18px 12px;
@@ -66,21 +59,11 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
         <div id="inputHighlightBox" class="input-highlight-box"><div class="muted">변환하기를 누르면 원문에서 바뀐 부분이 여기에 표시됩니다.</div></div>
       </div>
       <div>
-        <div class="box-title">변환 결과</div>
-       <div
-  id="resultBox"
-  class="result-box"
-  contenteditable="true"
->
-  변환 결과가 여기에 표시됩니다.
+  <div class="box-title">변환 결과</div>
+  <div id="resultBox" contenteditable="true">
+    변환 결과가 여기에 표시됩니다.
+  </div>
 </div>
-
-<textarea
-  id="finalEditBox"
-  class="final-edit-box"
-  placeholder="문맥 보정 후 최종 수정할 내용을 입력하세요."
-></textarea>
-      </div>
     </div>
     <div class="btns">
       <button onclick="convertText()">변환하기</button>
