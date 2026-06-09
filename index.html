@@ -381,9 +381,9 @@ function fixKoreanParticles(text){
     })
 
     // 은/는 보정
-    .replace(/([가-힣]+)(은|는)(?=[\s.,!?~]|$)/g, (match, word)=>{
-      return word + chooseParticle(word, '은/는');
-    })
+    //.replace(/([가-힣]+)(은|는)(?=[\s.,!?~]|$)/g, (match, word)=>{
+    //  return word + chooseParticle(word, '은/는');
+    //})
 
     // 와/과 보정
     .replace(/([가-힣]+)(와|과)(?=[\s.,!?~]|$)/g, (match, word)=>{
