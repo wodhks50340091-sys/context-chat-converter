@@ -11,7 +11,21 @@
 .choice:hover{background:#ffe4e6;border-radius:6px}
 .choice-divider{color:#fb7185;font-weight:900}
 .selected-context{color:#e11d48;font-weight:900;background:#fff1f2;border-radius:6px;padding:1px 3px}
-  .footer{
+.chatgpt-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  padding:11px 14px;
+  font-weight:800;
+  background:#10a37f;
+  color:#fff;
+  text-decoration:none;
+}
+.chatgpt-link:hover{
+  background:#0e8f70;
+}
+.footer{
   margin-top:30px;
   padding:18px 12px;
   text-align:center;
@@ -45,8 +59,11 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
     </div>
     <div class="btns">
       <button onclick="convertText()">변환하기</button>
-      <button class="ai" onclick="contextCorrect()">문맥/조사 보정하기</button>
-      <button class="secondary" onclick="copyResult()">결과 복사하기</button>
+      <button class="ai" onclick="contextCorrect()">문맥 보정하기</button>
+<a class="chatgpt-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">
+  ChatGPT에 물어보기
+</a>
+<button class="secondary" onclick="copyResult()">결과 복사하기</button>
       <button class="light" onclick="clearAll()">초기화</button>
     </div>
     <div id="stats" class="stats"></div>
