@@ -853,8 +853,8 @@ async function addBulkRules(){
   }
 
   const existingSet=new Set(
-    allRules().map(r=>`${r.from}|||${r.to}`)
-  );
+allRules().map(r=>r.from.trim())
+);
 
   const lines=raw
     .split('\n')
@@ -881,9 +881,9 @@ async function addBulkRules(){
 
     const key=`${from}|||${to}`;
 
-    if(existingSet.has(key)) return;
+    if(existingSet.has(from)) return;
 
-    existingSet.add(key);
+existingSet.add(from);
     newRules.push({
       from_text:from,
       to_text:to
