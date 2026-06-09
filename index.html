@@ -746,8 +746,8 @@ async function askChatGPT(){
 const result=document.getElementById('resultBox').innerText.trim();
 
 if(!result || result.includes('변환 결과가 여기에 표시됩니다')){
-alert('먼저 문장을 변환해주세요.');
-return;
+  alert('먼저 문장을 변환해주세요.');
+  return;
 }
 
 const prompt =
@@ -758,27 +758,21 @@ const prompt =
 ${result}`;
 
 try{
-await navigator.clipboard.writeText(prompt);
 
-```
-alert(
-```
+  await navigator.clipboard.writeText(prompt);
 
+  alert(
 `ChatGPT로 이동합니다.
 
 프롬프트가 자동 복사되었습니다.
 ChatGPT 창에서 붙여넣기(Ctrl+V) 해주세요.`
-);
+  );
 
-```
-window.open('https://chatgpt.com/', '_blank');
-```
+  window.open('https://chatgpt.com/', '_blank');
 
 }catch(e){
 
-```
-alert('복사에 실패했습니다.');
-```
+  alert('복사에 실패했습니다.');
 
 }
 }
