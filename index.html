@@ -25,6 +25,19 @@
 .chatgpt-link:hover{
   background:#0e8f70;
 }
+.final-edit-box{
+  width:100%;
+  min-height:180px;
+  margin-top:14px;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:14px;
+  font-size:15px;
+  line-height:1.7;
+  resize:vertical;
+  background:#fff;
+  display:block;
+}
 .footer{
   margin-top:30px;
   padding:18px 12px;
@@ -54,7 +67,15 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
       </div>
       <div>
         <div class="box-title">변환 결과</div>
-        <div id="resultBox">변환 결과가 여기에 표시됩니다.</div>
+       <div id="resultBox" class="result-box">
+  변환 결과가 여기에 표시됩니다.
+</div>
+
+<textarea
+  id="finalEditBox"
+  class="final-edit-box"
+  placeholder="문맥 보정 후 최종 수정할 내용을 입력하세요."
+></textarea>
       </div>
     </div>
     <div class="btns">
@@ -490,7 +511,14 @@ const baseText=lastConvertedText || box.innerText;
 
   html = fixKoreanParticles(html);
   html = fixCommonKoreanTypos(html);
-  
+  const finalEditBox=document.getElementById('finalEditBox');
+
+if(finalEditBox){
+  const preview=document.createElement('div');
+  preview.innerHTML=html;
+
+  finalEditBox.value=preview.innerText;
+}
   box.innerHTML=html;
   renderInputHighlight(lastMatchedRules, lastContextMatches);
 
