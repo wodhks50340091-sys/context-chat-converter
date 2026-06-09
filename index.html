@@ -99,11 +99,18 @@ button:disabled{opacity:.55;cursor:not-allowed}.input-highlight-box{margin-top:1
 
 
   <section class="panel">
-    <div class="box-title" id="wordAddBox">단어 추가</div>
+    <div class="box-title" id="wordAddBox">하나씩 단어 추가</div>
     <div class="add-grid">
       <input id="newFrom" placeholder="기존 표현 입력" />
       <input id="newTo" placeholder="변환 표현 입력" />
       <button onclick="addRule()">추가</button>
+
+      <textarea id="bulkRules" placeholder="예)
+근무 → 운영 참여
+업무지시 → 운영 안내
+직원관리 → 행사 운영 관리"></textarea>
+
+<button onclick="addBulkRules()">붙여넣은 단어 한번에 추가</button>
     </div>
     <div class="small">추가한 단어는 변환표에 저장됩니다. </div>
     <div id="ruleSyncStatus" class="sync-status"></div>
@@ -805,7 +812,75 @@ ChatGPT 창에서 붙여넣기(Ctrl+V) 해주세요.`
 }
 }
 
+async function addBulkRules(){
+  const raw=document.getElementById('bulkRules').value.trim();
 
+  if(!raw){
+    alert('추가할 단어를 붙여넣어주세요.');
+    return;
+  }
+
+  if(!supabaseClient){
+    alert('Supabase 연결을 확인해주세요.');
+    return;
+  }
+
+  const existingSet=new Set(
+    allRules().map(r=>`${r.from}|||${r.to}`)
+  );
+
+  const lines=raw
+    .split('\n')
+    .map(line=>line.trim())
+    .filter(Boolean);
+
+  const newRules=[];
+
+  lines.forEach(line=>{
+    let parts=[];
+
+    if(line.includes('→')){
+      parts=line.split('→');
+    }else if(line.includes('->')){
+      parts=line.split('->');
+    }else{
+      return;
+    }
+
+    const from=parts[0].trim();
+    const to=parts.slice(1).join('→').trim();
+
+    if(!from || !to) return;
+
+    const key=`${from}|||${to}`;
+
+    if(existingSet.has(key)) return;
+
+    existingSet.add(key);
+    newRules.push({
+      from_text:from,
+      to_text:to
+    });
+  });
+
+  if(newRules.length===0){
+    alert('새로 추가할 단어가 없습니다. 중복 항목은 제외되었습니다.');
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from('custom_rules')
+    .insert(newRules);
+
+  if(error){
+    alert('단어 추가 실패: ' + error.message);
+    return;
+  }
+
+  document.getElementById('bulkRules').value='';
+  await loadCustomRules();
+
+  alert(`${newRules.length}개 단어가 표에 추가되었습니다.`);
   
 renderTable();
 renderInputHighlight([], []);
